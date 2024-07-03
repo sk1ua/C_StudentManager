@@ -84,11 +84,6 @@
     </key>
   </component>
   <component name="RunManager">
-    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
-      <method v="2">
-        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="C_StudentManager" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="C_StudentManager" TARGET_NAME="C_StudentManager" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="C_StudentManager" RUN_TARGET_NAME="C_StudentManager">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -105,6 +100,7 @@
       <updated>1719966836293</updated>
       <workItem from="1719966838359" duration="2000" />
       <workItem from="1719966918173" duration="4469000" />
+      <workItem from="1719973853012" duration="59000" />
     </task>
     <servers />
   </component>

@@ -75,28 +75,28 @@ MaxIndices Max(STU *p, int scoreIndex) {
     result.count = 0; // 初始化计数为0
     int maxScore = -1; // 初始化最高分为-1
 
-    // 第一遍扫描：找到最高分
+    // 找到最高分
     for (int i = 0; i < studentCount; i++) {
         if (p[i].score[scoreIndex] > maxScore) {
             maxScore = p[i].score[scoreIndex];
         }
     }
 
-    // 第二遍扫描：计算有多少学生获得了最高分
+    // 计算有多少学生获得了最高分
     for (int i = 0; i < studentCount; i++) {
         if (p[i].score[scoreIndex] == maxScore) {
             result.count++;
         }
     }
 
-    // 根据计数动态分配索引数组内存
+    // 分配数组内存
     result.indices = (int*)malloc(result.count * sizeof(int));
     if (result.indices == NULL) {
         perror("内存分配失败");
         exit(1); // 如果内存分配失败，则退出
     }
 
-    // 第三遍扫描：存储所有最高分学生的索引
+    // 存储所有最高分学生的索引
     int j = 0;
     for (int i = 0; i < studentCount; i++) {
         if (p[i].score[scoreIndex] == maxScore) {
