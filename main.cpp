@@ -33,7 +33,7 @@ void Input(STU *p, int n) {
     }
     for (int i = 0; i < n; i++) {
         if (fscanf(file, "%s %s %s %d %d %d %d", p[i].ID, p[i].name, p[i].major,
-                   &p[i].classNo, &p[i].score[0], &p[i].score[1], &p[i].score[2])) {
+                   &p[i].classNo, &p[i].score[0], &p[i].score[1], &p[i].score[2]) == 7) {
             studentCount++;
                    }
     }
@@ -59,16 +59,23 @@ STU Fetch(int studentIndex) {
         perror("无法打开文件");
         return temp;
     }
-    for (int i = 0; i <= studentIndex; i++) {
+    int i = 0;
+    for (i = 0; i <= studentIndex; i++) {
         if (fscanf(file, "%s %s %s %d %d %d %d", temp.ID, temp.name, temp.major,
-                   &temp.classNo, &temp.score[0], &temp.score[1], &temp.score[2])) {
+                   &temp.classNo, &temp.score[0], &temp.score[1], &temp.score[2]) != 7) {
             printf("读取学生信息时出错：第 %d 行\n", i + 1);
             break;
                    }
     }
+
+    if (i <= studentIndex) {
+        printf("未找到指定索引的学生信息\n");
+    }
+
     fclose(file);
     return temp;
 }
+
 
 MaxIndices Max(STU *p, int scoreIndex) {
     MaxIndices result;
