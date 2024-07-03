@@ -3,15 +3,9 @@
 //
 #include <stdio.h>
 #include <stdlib.h>
-#define N 10
+#include "student.h"
 
-typedef struct {
-    char ID[50]; //学号
-    char name[50]; //姓名
-    char major[50]; //专业
-    int classNo; //班级
-    int score[3]; //三门课成绩
-} STU;
+#define N 10
 
 typedef struct {
     int* indices; // 用于保存最高分学生索引的数组
