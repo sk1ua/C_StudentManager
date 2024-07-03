@@ -1,11 +1,8 @@
 //
 // Created by 15857 on 24-7-3.
 //
-//
-// Created by 15857 on 24-7-1.
-//
 #include <stdio.h>
-#include <unistd.h>
+#include <stdlib.h>
 #define N 10
 
 typedef struct {
@@ -16,6 +13,11 @@ typedef struct {
     int score[3]; //三门课成绩
 } STU;
 
+typedef struct {
+    int* indices; // 用于保存最高分学生索引的数组
+    int count;    // 最高分学生的数量
+} MaxIndices;
+
 STU student[N];
 int studentCount = 0;
 
@@ -23,6 +25,10 @@ void Input(STU *p, int n) {
     FILE *file = fopen("studentInit.dat","r");
     if(file == NULL) {
         perror("无法打开文件");
+        return;
+    }
+    if(n > N) {
+        printf("输入的学生数量过大\n");
         return;
     }
     for (int i = 0; i < n; i++) {
@@ -64,18 +70,41 @@ STU Fetch(int studentIndex) {
     return temp;
 }
 
-int Max(STU *p, int scoreIndex) {
-    int maxIndex = -1; // 初始化最大分数学生的索引为-1，表示未找到
-    int maxScore = -1; // 初始化最大分数为-1，表示还未比较
+MaxIndices Max(STU *p, int scoreIndex) {
+    MaxIndices result;
+    result.count = 0; // 初始化计数为0
+    int maxScore = -1; // 初始化最高分为-1
 
+    // 第一遍扫描：找到最高分
     for (int i = 0; i < studentCount; i++) {
         if (p[i].score[scoreIndex] > maxScore) {
-            maxScore = p[i].score[scoreIndex]; // 更新最大分数
-            maxIndex = i; // 更新最大分数学生的索引
+            maxScore = p[i].score[scoreIndex];
         }
     }
 
-    return maxIndex; // 返回最大分数学生的索引
+    // 第二遍扫描：计算有多少学生获得了最高分
+    for (int i = 0; i < studentCount; i++) {
+        if (p[i].score[scoreIndex] == maxScore) {
+            result.count++;
+        }
+    }
+
+    // 根据计数动态分配索引数组内存
+    result.indices = (int*)malloc(result.count * sizeof(int));
+    if (result.indices == NULL) {
+        perror("内存分配失败");
+        exit(1); // 如果内存分配失败，则退出
+    }
+
+    // 第三遍扫描：存储所有最高分学生的索引
+    int j = 0;
+    for (int i = 0; i < studentCount; i++) {
+        if (p[i].score[scoreIndex] == maxScore) {
+            result.indices[j++] = i;
+        }
+    }
+
+    return result;
 }
 
 void SortSelect(STU *p) {
@@ -139,15 +168,19 @@ void menu() {
             break;
 
             case 4:
-                printf("输入课程序号: (0-2)");
+                printf("输入课程序号: (1-3)");
             scanf("%d", &index);
+            index--;
             if (index >= 0 && index < 3) {
-                int maxIndex = Max(student, index);
-                if (maxIndex != -1) {
-                    Output(&student[maxIndex]);
+                MaxIndices maxIndices = Max(student, index);
+                if (maxIndices.count > 0) {
+                    for (int i = 0; i < maxIndices.count; i++) {
+                        Output(&student[maxIndices.indices[i]]);
+                    }
                 } else {
                     printf("未找到最高分学生\n");
                 }
+                free(maxIndices.indices); // Free the dynamically allocated memory
             } else {
                 printf("无效的课程序号\n");
             }
