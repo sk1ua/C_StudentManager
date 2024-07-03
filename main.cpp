@@ -64,6 +64,42 @@ STU Fetch(int studentIndex) {
     return temp;
 }
 
+int Max(STU *p, int scoreIndex) {
+    int maxIndex = -1; // 初始化最大分数学生的索引为-1，表示未找到
+    int maxScore = -1; // 初始化最大分数为-1，表示还未比较
+
+    for (int i = 0; i < studentCount; i++) {
+        if (p[i].score[scoreIndex] > maxScore) {
+            maxScore = p[i].score[scoreIndex]; // 更新最大分数
+            maxIndex = i; // 更新最大分数学生的索引
+        }
+    }
+
+    return maxIndex; // 返回最大分数学生的索引
+}
+
+void SortSelect(STU *p) {
+    for (int i = 0; i < studentCount - 1; i++) {
+        int minIndex = i;
+        float minAvgScore = (p[i].score[0] + p[i].score[1] + p[i].score[2]) / 3.0;
+
+        for (int j = i + 1; j < studentCount; j++) {
+            float avgScoreJ = (p[j].score[0] + p[j].score[1] + p[j].score[2]) / 3.0;
+            if (avgScoreJ < minAvgScore) {
+                minIndex = j;
+                minAvgScore = avgScoreJ;
+            }
+        }
+
+        if (minIndex != i) {
+            // Swap the students
+            STU temp = p[i];
+            p[i] = p[minIndex];
+            p[minIndex] = temp;
+        }
+    }
+}
+
 void menu() {
     int choice, n, index;
     while (1) {
@@ -72,7 +108,9 @@ void menu() {
         printf("1. 从文件中输入学生信息\n");
         printf("2. 显示所有学生信息\n");
         printf("3. 随机读取某个学生信息\n");
-        printf("4. 退出\n");
+        printf("4. 返回某个课程的最高分学生\n");
+        printf("5. 按平均分排序\n");
+        printf("6. 退出\n");
         printf("-------------------------\n");
         printf("选择一个选项: ");
         scanf("%d", &choice);
@@ -101,6 +139,29 @@ void menu() {
             break;
 
             case 4:
+                printf("输入课程序号: (0-2)");
+            scanf("%d", &index);
+            if (index >= 0 && index < 3) {
+                int maxIndex = Max(student, index);
+                if (maxIndex != -1) {
+                    Output(&student[maxIndex]);
+                } else {
+                    printf("未找到最高分学生\n");
+                }
+            } else {
+                printf("无效的课程序号\n");
+            }
+            break;
+
+            case 5:
+                SortSelect(student);
+                printf("按平均分排序后的学生信息:\n");
+                for (int i = 0; i < studentCount; i++) {
+                    Output(&student[i]);
+                }
+            break;
+
+            case 6:
                 printf("退出系统\n");
             return;
 
