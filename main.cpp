@@ -8,7 +8,7 @@
 
 #include "student.h"
 
-#define N 10
+#define N 100
 
 typedef struct {
     int* indices; // 用于保存最高分学生索引的数组
@@ -38,6 +38,21 @@ void Input(STU *p, int n) {
         studentCount++;
     }
     printf("录入学生信息成功\n");
+    fclose(file);
+}
+
+void InputToFile(const char* filename, STU* students, int numStudents) {
+    FILE* file = fopen(filename, "wb");
+    if (file == NULL) {
+        perror("Failed to open file for writing");
+        return;
+    }
+
+    size_t written = fwrite(students, sizeof(STU), numStudents, file);
+    if (written != numStudents) {
+        perror("Failed to write all student data to file");
+    }
+
     fclose(file);
 }
 
@@ -224,6 +239,7 @@ void SortWithMajor(STU * p) {
 
 void menu() {
     int choice, n, index;
+    Input(student, 10);
     while (1) {
         printf("--------学生管理系统菜单--------\n");
         printf("1. 从文件中输入学生信息\n");
@@ -245,7 +261,26 @@ void menu() {
             case 1:
                 printf("输入学生数量: ");
             scanf("%d", &n);
-            Input(student, n);
+            for(int i = 0; i < n; i++) {
+                printf("输入学生信息: ");
+                printf("学号: ");
+                scanf("%s", student[studentCount].ID);
+                printf("姓名: ");
+                scanf("%s", student[studentCount].name);
+                printf("专业: ");
+                scanf("%s", student[studentCount].major);
+                printf("班级: ");
+                scanf("%d", &student[studentCount].classNo);
+                printf("课程1成绩: ");
+                scanf("%d", &student[studentCount].score[0]);
+                printf("课程2成绩: ");
+                scanf("%d", &student[studentCount].score[1]);
+                printf("课程3成绩: ");
+                scanf("%d", &student[studentCount].score[2]);
+                studentCount++;
+            }
+            InputToFile("studentInit.dat", student, studentCount);
+            printf("录入学生信息成功\n");
             break;
 
             case 2:
