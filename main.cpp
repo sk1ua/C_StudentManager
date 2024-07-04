@@ -1,8 +1,11 @@
 //
 // Created by 15857 on 24-7-3.
 //
+#include <algorithm>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+
 #include "student.h"
 
 #define N 10
@@ -23,49 +26,49 @@ void Input(STU *p, int n) {
     }
     if(n > N) {
         printf("输入的学生数量过大\n");
+        fclose(file);
         return;
     }
     for (int i = 0; i < n; i++) {
-        if (fscanf(file, "%s %s %s %d %d %d %d", p[i].ID, p[i].name, p[i].major,
-                   &p[i].classNo, &p[i].score[0], &p[i].score[1], &p[i].score[2]) == 7) {
-            studentCount++;
-                   }
+        if (fread(&p[i], sizeof(STU), 1, file) != 1) {
+            printf("读取学生信息时出错\n");
+            fclose(file);
+            return;
+        }
+        studentCount++;
     }
+    printf("录入学生信息成功\n");
     fclose(file);
 }
 
 void Output(STU *p) {
-    printf("-------------------------\n");
-    printf("学号: %s\n",p->ID);
-    printf("姓名: %s\n",p->name);
-    printf("专业: %s\n",p->major);
-    printf("班级: %d\n",p->classNo);
-    printf("课1: %d\n",p->score[0]);
-    printf("课2: %d\n",p->score[1]);
-    printf("课3: %d\n",p->score[2]);
-    printf("-------------------------\n");
+    //printf("|------------|----------------------|----------------------|--------|--------|--------|--------|\n");
+    printf("| %-10s | %-20s | %-20s | %-6d | %-6d | %-6d | %-6d |\n", p->ID, p->name, p->major, p->classNo, p->score[0], p->score[1], p->score[2]);
+    //printf("|------------|----------------------|----------------------|--------|--------|--------|--------|\n");
 }
+void Outputtitle() {
+    //printf("|------------|----------------------|----------------------|--------|--------|--------|--------|\n");
+    printf("|     ID     |         Name         |        Major         | Class  | Score1 | Score2 | Score3 |\n");
+    //printf("|------------|----------------------|----------------------|--------|--------|--------|--------|\n");
+}
+
 
 STU Fetch(int studentIndex) {
     FILE *file = fopen("studentInit.dat", "r");
-    STU temp;
+    STU temp = {0};
     if (file == NULL) {
         perror("无法打开文件");
         return temp;
     }
-    int i = 0;
-    for (i = 0; i <= studentIndex; i++) {
-        if (fscanf(file, "%s %s %s %d %d %d %d", temp.ID, temp.name, temp.major,
-                   &temp.classNo, &temp.score[0], &temp.score[1], &temp.score[2]) != 7) {
-            printf("读取学生信息时出错：第 %d 行\n", i + 1);
-            break;
-                   }
+    if (fseek(file, studentIndex * sizeof(STU), SEEK_SET) != 0) {
+        perror("无法定位到文件位置");
+        fclose(file);
+        return temp;
     }
-
-    if (i <= studentIndex) {
-        printf("未找到指定索引的学生信息\n");
+    if (fread(&temp, sizeof(STU), 1, file) != 1) {
+        perror("未找到指定索引的学生信息");
+        temp = (STU){0};
     }
-
     fclose(file);
     return temp;
 }
@@ -73,31 +76,27 @@ STU Fetch(int studentIndex) {
 
 MaxIndices Max(STU *p, int scoreIndex) {
     MaxIndices result;
-    result.count = 0; // 初始化计数为0
-    int maxScore = -1; // 初始化最高分为-1
+    result.count = 0;
+    int maxScore = -1;
 
-    // 找到最高分
     for (int i = 0; i < studentCount; i++) {
         if (p[i].score[scoreIndex] > maxScore) {
             maxScore = p[i].score[scoreIndex];
         }
     }
 
-    // 计算有多少学生获得了最高分
     for (int i = 0; i < studentCount; i++) {
         if (p[i].score[scoreIndex] == maxScore) {
             result.count++;
         }
     }
 
-    // 分配数组内存
     result.indices = (int*)malloc(result.count * sizeof(int));
     if (result.indices == NULL) {
         perror("内存分配失败");
-        exit(1); // 如果内存分配失败，则退出
+        exit(1);
     }
 
-    // 存储所有最高分学生的索引
     int j = 0;
     for (int i = 0; i < studentCount; i++) {
         if (p[i].score[scoreIndex] == maxScore) {
@@ -122,7 +121,6 @@ void SortSelect(STU *p) {
         }
 
         if (minIndex != i) {
-            // Swap the students
             STU temp = p[i];
             p[i] = p[minIndex];
             p[minIndex] = temp;
@@ -130,20 +128,119 @@ void SortSelect(STU *p) {
     }
 }
 
+void SortWithClass(STU *p) {
+    printf("请输入班级序号(1-3): ");
+    int classNo;
+    int read = scanf("%d", &classNo);
+    if (read != 1) {
+        printf("输入错误，请重新输入\n");
+        while (getchar() != '\n');
+        return;
+    }
+    if (classNo < 1 || classNo > 3) {
+        printf("无效的班级序号\n");
+        return;
+    }
+
+    int classStudentCount = 0;
+    for (int i = 0; i < studentCount; i++) {
+        if (p[i].classNo == classNo) {
+            classStudentCount++;
+        }
+    }
+
+    STU classStudents[classStudentCount];
+    int index = 0;
+    for (int i = 0; i < studentCount; i++) {
+        if (p[i].classNo == classNo) {
+            classStudents[index++] = p[i];
+        }
+    }
+
+    for (int i = 0; i < classStudentCount - 1; i++) {
+        for (int j = 0; j < classStudentCount - i - 1; j++) {
+            int totalScoreJ = classStudents[j].score[0] + classStudents[j].score[1] + classStudents[j].score[2];
+            int totalScoreJ1 = classStudents[j + 1].score[0] + classStudents[j + 1].score[1] + classStudents[j + 1].score[2];
+            if (totalScoreJ > totalScoreJ1) {
+                STU temp = classStudents[j];
+                classStudents[j] = classStudents[j + 1];
+                classStudents[j + 1] = temp;
+            }
+        }
+    }
+
+    Outputtitle();
+    for (int i = 0; i < classStudentCount; i++) {
+        Output(&classStudents[i]);
+    }
+}
+void SortWithMajor(STU * p) {
+    printf("请输入专业名称(ComputerScience/Software/Network): ");
+    char major[50];
+    int read = scanf("%s", major);
+    if (read != 1) {
+        printf("输入错误，请重新输入\n");
+        while (getchar() != '\n');
+        return;
+    }
+    if (strcmp(major, "ComputerScience") != 0 && strcmp(major, "Software") != 0 && strcmp(major, "Network") != 0) {
+        printf("无效的专业名称\n");
+        return;
+    }
+    int majorStudentCount = 0;
+    for (int i = 0; i < studentCount; i++) {
+        if (strcmp(p[i].major, major) == 0) {
+            majorStudentCount++;
+        }
+    }
+
+    STU majorStudents[majorStudentCount];
+    int index = 0;
+    for (int i = 0; i < studentCount; i++) {
+        if (strcmp(p[i].major, major) == 0) {
+            majorStudents[index++] = p[i];
+        }
+    }
+
+    for (int i = 0; i < majorStudentCount - 1; i++) {
+        for (int j = 0; j < majorStudentCount - i - 1; j++) {
+            int totalScoreJ = majorStudents[j].score[0] + majorStudents[j].score[1] + majorStudents[j].score[2];
+            int totalScoreJ1 = majorStudents[j + 1].score[0] + majorStudents[j + 1].score[1] + majorStudents[j + 1].score[2];
+            if (totalScoreJ > totalScoreJ1) {
+                STU temp = majorStudents[j];
+                majorStudents[j] = majorStudents[j + 1];
+                majorStudents[j + 1] = temp;
+            }
+        }
+    }
+
+    Outputtitle();
+    for (int i = 0; i < majorStudentCount; i++) {
+        Output(&majorStudents[i]);
+    }
+
+}
+
+
 void menu() {
     int choice, n, index;
     while (1) {
-        printf("-------------------------\n");
-        printf("学生管理系统\n");
+        printf("--------学生管理系统菜单--------\n");
         printf("1. 从文件中输入学生信息\n");
         printf("2. 显示所有学生信息\n");
-        printf("3. 随机读取某个学生信息\n");
+        printf("3. 查看指定学生信息\n");
         printf("4. 返回某个课程的最高分学生\n");
         printf("5. 按平均分排序\n");
-        printf("6. 退出\n");
-        printf("-------------------------\n");
+        printf("6. 按特定条件查询\n");
+        printf("7. 退出系统\n");
+        printf("----------------------------\n");
         printf("选择一个选项: ");
-        scanf("%d", &choice);
+        int read = scanf("%d", &choice);
+        if (read != 1) {
+            printf("输入错误，请重新输入\n");
+            while (getchar() != '\n');
+            continue;
+        }
         switch (choice) {
             case 1:
                 printf("输入学生数量: ");
@@ -152,6 +249,7 @@ void menu() {
             break;
 
             case 2:
+                Outputtitle();
                 for (int i = 0; i < studentCount; i++) {
                     Output(&student[i]);
                 }
@@ -175,27 +273,94 @@ void menu() {
             if (index >= 0 && index < 3) {
                 MaxIndices maxIndices = Max(student, index);
                 if (maxIndices.count > 0) {
+                    Outputtitle();
                     for (int i = 0; i < maxIndices.count; i++) {
                         Output(&student[maxIndices.indices[i]]);
                     }
                 } else {
                     printf("未找到最高分学生\n");
                 }
-                free(maxIndices.indices); // Free the dynamically allocated memory
+                free(maxIndices.indices);
             } else {
                 printf("无效的课程序号\n");
             }
             break;
 
             case 5:
-                SortSelect(student);
+                int sortChoice;
+            printf("1.所有人 2.班级 3.专业\n");
+            printf("选择一个选项: ");
+            read = scanf("%d", &sortChoice);
+            if (read != 1) {
+                printf("输入错误，请重新输入\n");
+                while (getchar() != '\n');
+                continue;
+            }
+            switch (sortChoice) {
+                case 1:
+                    SortSelect(student);
                 printf("按平均分排序后的学生信息:\n");
                 for (int i = 0; i < studentCount; i++) {
                     Output(&student[i]);
                 }
+                break;
+                case 2:
+                    SortWithClass(student);
+                break;
+                case 3:
+                    SortWithMajor(student);
+                    break;
+                default:
+                    printf("无效选项\n");
+            }
+            break;
+            case 6: {
+                printf("按特定条件查询\n");
+                printf("1.按班级查询 2.按分数段查询\n");
+                printf("选择一个选项: ");
+                read = scanf("%d", &sortChoice);
+                if (read != 1) {
+                    printf("输入错误，请重新输入\n");
+                    while (getchar() != '\n');
+                    continue;
+                }
+                switch (sortChoice) {
+                    case 1:
+                        SortWithClass(student);
+                    break;
+                    case 2: {
+                        printf("输入总分分数段(1-300): ");
+                        int totalScore;
+                        read = scanf("%d", &totalScore);
+                        if (read != 1) {
+                            printf("输入错误，请重新输入\n");
+                            while (getchar() != '\n');
+                            continue;
+                        }
+                        if (totalScore < 1 || totalScore > 300) {
+                            printf("无效的分数段\n");
+                            continue;
+                        }
+                        int count = 0;
+                        Outputtitle();
+                        for (int i = 0; i < studentCount; i++) {
+                            int total = student[i].score[0] + student[i].score[1] + student[i].score[2];
+                            if (total >= totalScore) {
+                                Output(&student[i]);
+                                count++;
+                            }
+                        }
+                        printf("共找到%d个学生\n", count);
+
+                    }
+                    break;
+                    default:
+                        printf("无效选项\n");
+                }
+            }
             break;
 
-            case 6:
+            case 7:
                 printf("退出系统\n");
             return;
 
