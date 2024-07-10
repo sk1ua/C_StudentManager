@@ -21,18 +21,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="568347b8-cdda-461d-9c2a-7bbfea5f1b54" name="更改" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/.cmake/api/v1/reply/cache-v2-6aaa354cee38e146d888.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/.cmake/api/v1/reply/index-2024-07-03T00-38-06-0207.json" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/.ninja_deps" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/.ninja_deps" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/.ninja_log" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/.ninja_log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeCache.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeCache.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/C_StudentManager.dir/main.cpp.obj" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/C_StudentManager.dir/main.cpp.obj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/rules.ninja" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/rules.ninja" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/C_StudentManager.exe" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/C_StudentManager.exe" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/Testing/Temporary/LastTest.log" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/Testing/Temporary/LastTest.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/studentInit.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/com.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/data.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/ge" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/sik.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/studentInit.dat" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/studentInit.dat" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -117,7 +116,7 @@
     </key>
   </component>
   <component name="RunManager">
-    <configuration name="C_StudentManager" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="true" PASS_PARENT_ENVS_2="true" PROJECT_NAME="C_StudentManager" TARGET_NAME="C_StudentManager" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="C_StudentManager" RUN_TARGET_NAME="C_StudentManager">
+    <configuration name="C_StudentManager" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="true" EMULATE_TERMINAL="true" PASS_PARENT_ENVS_2="true" PROJECT_NAME="C_StudentManager" TARGET_NAME="C_StudentManager" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="C_StudentManager" RUN_TARGET_NAME="C_StudentManager">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -163,6 +162,11 @@
       <workItem from="1720491912104" duration="1660000" />
       <workItem from="1720520252872" duration="3653000" />
       <workItem from="1720526991467" duration="471000" />
+      <workItem from="1720527519923" duration="9000" />
+      <workItem from="1720531688576" duration="111000" />
+      <workItem from="1720569528290" duration="54000" />
+      <workItem from="1720570602674" duration="3415000" />
+      <workItem from="1720574127638" duration="41000" />
     </task>
     <servers />
   </component>

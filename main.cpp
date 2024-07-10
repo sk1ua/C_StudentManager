@@ -21,6 +21,7 @@ typedef struct {
 
 STU student[N]; // 学生数组
 int studentCount = 0; // 当前学生数量
+char NowFileName[255] = "StudentInit.dat"; // 当前文件名
 
 // 从文件中读入学生信息
 void Input(const char* filename, STU *p, int maxStudents) {
@@ -123,12 +124,14 @@ MaxIndices Max(STU *p, int scoreIndex) {
 }
 // 查询，班级，成绩
 void Search(STU *p, int classNo, char s, int scoreSum) {
+    int cnt = 0;
     for (int i = 0; i < studentCount; i++) {
         int totalScore = p[i].score[0] + p[i].score[1] + p[i].score[2];
         if (p[i].classNo == classNo && ((s == '>' && totalScore > scoreSum) || (s == '<' && totalScore < scoreSum))) {
             Output(&p[i]);
         }
     }
+    printf("查找到%d个学生",cnt);
 }
 
 // 根据ID删除学生信息
@@ -202,6 +205,7 @@ void Sort_buble(STU *p, int n, int ClassNo) {
     for (int i = 0; i < count; i++) {
         Output(&stu_class_ave[i]);
     }
+    printf("查找到%d个学生\n",count);
     char filename[50];
     printf("请输入你想存入的文件名:");
     int read = scanf("%s",filename);
@@ -213,6 +217,7 @@ void Sort_buble(STU *p, int n, int ClassNo) {
     InputToFile(filename,stu_class_ave,count);
     printf("排序后信息成功存入%s\n",filename);
 }
+
 // 插入排序，根据专业和课程排序
 void Sort_insert(STU *p, int n, char *major, int subjectIndex) {
     int count = 0;
@@ -245,6 +250,7 @@ void Sort_insert(STU *p, int n, char *major, int subjectIndex) {
     for (int i = 0; i < count; i++) {
         Output(&stu_major_subject[i]);
     }
+    printf("查找到%d个学生\n",count);
     char filename[50];
     printf("请输入你想存入的文件名:");
     int read = scanf("%s",filename);
@@ -318,10 +324,12 @@ void menu() {
         printf("5. 返回某个课程的最高分学生\n");
         printf("6. 排序(所有人平均分排序/按班级排序/按专业,按某门课排序)\n");
         printf("7. 按特定条件查询(班级,分数段)\n");
-        printf("8. 清空当前内存中存入学生信息\n");
+        printf("8. 清空当前系统中存入的学生信息文件\n");
         printf("9. 读入新的学生文件信息\n");
         printf("10.退出系统\n");
         printf("----------------------------\n");
+        if(studentCount)printf("现在打开的是\"%s\"文件\n",NowFileName);
+        else printf("未打开学生信息文件");
         printf("当前已经录入%d个学生的信息.\n", studentCount);
         printf("选择一个选项: ");
         int read = scanf("%d", &choice);
@@ -388,11 +396,11 @@ void menu() {
                         if (!found) {
                             Outputtitle();
                         }
+                        j++;
                         Output(&student[i]);
                         found = 1;
                         break;
                     }
-                    j++;
                 }
                 printf("查找到%d个学生\n", j);
                 if (!found) {
@@ -559,6 +567,7 @@ void menu() {
                     while (getchar() != '\n');
                     return;
                 }
+                strcpy(NowFileName, newFilename);
                 Input(newFilename, student, N);
                 system("pause");
                 system("cls");
