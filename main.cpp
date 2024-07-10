@@ -329,7 +329,7 @@ void menu() {
         printf("10.退出系统\n");
         printf("----------------------------\n");
         if(studentCount)printf("现在打开的是\"%s\"文件\n",NowFileName);
-        else printf("未打开学生信息文件");
+        else printf("未打开学生信息文件\n");
         printf("当前已经录入%d个学生的信息.\n", studentCount);
         printf("选择一个选项: ");
         int read = scanf("%d", &choice);
