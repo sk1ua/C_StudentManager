@@ -1,9 +1,10 @@
 //
-// Created by 15857 on 24-7-3.
+// Created by Sk1ua on 24-7-3.
 //
 
 // 包含必要的头文件
 #include <algorithm>
+#include <windows.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -415,13 +416,15 @@ void menu() {
                 printf("输入课程序号: (1-3)");
             scanf("%d", &index);
             index--;
-            if (index >= 0 && index < 3) {
+            if (index >= 0 && index < 3) {6
+
                 MaxIndices maxIndices = Max(student, index);
                 if (maxIndices.count > 0) {
                     Outputtitle();
                     for (int i = 0; i < maxIndices.count; i++) {
                         Output(&student[maxIndices.indices[i]]);
                     }
+                    printf("查找到%d名课程序号%d的最高分学生\n", maxIndices.count, index + 1);
                 } else {
                     printf("未找到最高分学生\n");
                 }
@@ -429,6 +432,8 @@ void menu() {
             } else {
                 printf("无效的课程序号\n");
             }
+            system("pause");
+            system("cls");
             break;
 
             case 6:
